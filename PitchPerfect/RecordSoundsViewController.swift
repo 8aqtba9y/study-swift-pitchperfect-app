@@ -17,25 +17,25 @@ class RecordSoundsViewController: BaseViewController, AVAudioRecorderDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("onCreate")
+        print("RecordSoundsVC onCreate")
         stopRecordingButton.isEnabled = false
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print("onStart or onRestart")
+        print("RecordSoundsVC onStart or onRestart")
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        print("onResume")
+        print("RecordSoundsVC onResume")
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        print("onPause")
+        print("RecordSoundsVC onPause")
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        print("onStop")
+        print("RecordSoundsVC onStop")
     }
 
     var audioRecorder: AVAudioRecorder!
@@ -69,11 +69,20 @@ class RecordSoundsViewController: BaseViewController, AVAudioRecorderDelegate {
     }
     
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
-        print("finished recording")
+        print("finished recording called audioRecorderDidFinishRecording")
         if flag {
-            performSegue(withIdentifier: "stopRecording", sender: audioRecorder.url)
+            super.performSegue(withIdentifier: "stopRecording", sender: recorder.url)
         } else {
             print("recording was not successful")
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        print("RecordSoundsVC prepare")
+        if segue.identifier == "stopRecording" {
+            let playSoundsVC = segue.destination as! PlaySoundsViewController
+            let recordedAudioURL = sender as! URL
+            playSoundsVC.recordedAudioURL = recordedAudioURL
         }
     }
 
